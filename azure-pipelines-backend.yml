@@ -4,10 +4,12 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  branches:
+    include:
+    - master
   paths:
     include:
-      - src/backend
+    - src/backend/*
 
 pool:
   name: Hosted VS2017
