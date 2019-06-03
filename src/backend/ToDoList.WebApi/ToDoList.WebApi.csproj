@@ -12,10 +12,13 @@
         <PackageReference Include="Microsoft.AspNetCore" Version="2.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\ToDoList.Core\ToDoList.Core.csproj" />
+      <ProjectReference Include="..\ToDoList.EntityFramework\ToDoList.EntityFramework.csproj" />
       <ProjectReference Include="..\ToDoList.Storage.Fake\ToDoList.Storage.Fake.csproj" />
     </ItemGroup>
 

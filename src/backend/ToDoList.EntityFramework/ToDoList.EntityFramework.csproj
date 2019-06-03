@@ -11,4 +11,8 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.4" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ToDoList.Core\ToDoList.Core.csproj" />
+    </ItemGroup>
+
 </Project>

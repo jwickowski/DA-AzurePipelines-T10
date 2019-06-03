@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToDoList.Core;
+using ToDoList.EntityFramework;
 using ToDoList.Storage.Fake;
 using ToDoList.WebApi.Controllers;
 
@@ -11,6 +13,7 @@ namespace ToDoList.WebApi
 {
     public class Startup
     {
+        const bool useRealDb = false;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,12 +30,28 @@ namespace ToDoList.WebApi
             services.AddTransient<ListItemCreator, ListItemCreator>();
             services.AddTransient<ListItemChecker, ListItemChecker>();
 
+           
+            if (useRealDb)
+            {
+                var connectionString = Configuration.GetConnectionString("ToDoListDatabase");
+                services.AddDbContext<ToDoListContext>(options =>
+                    options.UseSqlServer(connectionString));
 
-            var fakeStorage = new FakeStorage();
-            services.AddSingleton<IListItemStorageSaver, FakeStorage>((serviceCollection) => fakeStorage);
-            services.AddSingleton<IListItemStorageReader, FakeStorage>((serviceCollection) => fakeStorage);
-            services.AddSingleton<IListItemStorageChanger, FakeStorage>((serviceCollection) => fakeStorage);
-            
+                var dbStorage = new FakeStorage();
+                services.AddTransient<IListItemStorageSaver, FakeStorage>((serviceCollection) => dbStorage);
+                services.AddTransient<IListItemStorageReader, FakeStorage>((serviceCollection) => dbStorage);
+                services.AddTransient<IListItemStorageChanger, FakeStorage>((serviceCollection) => dbStorage);
+            }
+            else
+            {
+                var fakeStorage = new FakeStorage();
+                services.AddSingleton<IListItemStorageSaver, FakeStorage>((serviceCollection) => fakeStorage);
+                services.AddSingleton<IListItemStorageReader, FakeStorage>((serviceCollection) => fakeStorage);
+                services.AddSingleton<IListItemStorageChanger, FakeStorage>((serviceCollection) => fakeStorage);
+                services.AddTransient<ToDoListContext, ToDoListContext>((serviceCollection) => null);
+            }                
+
+
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -43,8 +62,13 @@ namespace ToDoList.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ToDoListContext context)
         {
+            if (useRealDb)
+            {
+                context.Database.Migrate();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
