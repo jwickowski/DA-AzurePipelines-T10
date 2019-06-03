@@ -2,7 +2,7 @@ import { ToDoItemsDataSourceRealService } from 'src/app/to-do/to-do-items-data-s
 
 export const environment = {
   production: true,
-  apiUrl: 'https://deployacademy-todolist-back.azurewebsites.net'
+  apiUrl: 'https://da-szkolenie-back.azurewebsites.net'
 };
 
 export { ToDoItemsDataSourceRealService as CurrentToDoItemsDataSourceService } 
