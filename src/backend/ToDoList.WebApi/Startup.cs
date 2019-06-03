@@ -35,10 +35,9 @@ namespace ToDoList.WebApi
 //                services.AddDbContext<ToDoListContext>(options =>
 //                    options.UseSqlServer(connectionString));
 //
-//                var dbStorage = new FakeStorage();
-//                services.AddTransient<IListItemStorageSaver, FakeStorage>((serviceCollection) => dbStorage);
-//                services.AddTransient<IListItemStorageReader, FakeStorage>((serviceCollection) => dbStorage);
-//                services.AddTransient<IListItemStorageChanger, FakeStorage>((serviceCollection) => dbStorage);
+//                services.AddTransient<IListItemStorageSaver, DbStorage>();
+//                services.AddTransient<IListItemStorageReader, DbStorage>();
+//                services.AddTransient<IListItemStorageChanger, DbStorage>();
 
             var fakeStorage = new FakeStorage();
             services.AddSingleton<IListItemStorageSaver, FakeStorage>((serviceCollection) => fakeStorage);
@@ -58,10 +57,7 @@ namespace ToDoList.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env /*, ToDoListContext context */)
         {
-//            if (useRealDb)
-//            {
 //                context.Database.Migrate();
-//            }
 
             if (env.IsDevelopment())
             {
