@@ -4,6 +4,7 @@ namespace ToDoList.EntityFramework
 {
     public class ToDoListContext: DbContext
     {
+        public DbSet<ListItemDatabaseEntity> ToDoListItems { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
