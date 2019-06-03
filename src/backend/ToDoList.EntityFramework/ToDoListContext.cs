@@ -6,6 +6,10 @@ namespace ToDoList.EntityFramework
     {
         public DbSet<ListItemDatabaseEntity> ToDoListItems { get; set; }
 
+        public ToDoListContext()
+        {
+            
+        }
         public ToDoListContext(DbContextOptions<ToDoListContext> options) : base(options)
         {
             
