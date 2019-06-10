@@ -30,7 +30,6 @@ export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceServic
 
     this.envConfigService.getApiUrl$()
       .pipe(switchMap(x => this.httpClient.post(x + "/api/listitems", { name: itemName })))
-
       .subscribe((x: ToDoItem) => {
         newItem.id = x.id
       },
@@ -54,7 +53,6 @@ export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceServic
           return this.httpClient.put(putUrl, {})
         }))
         .subscribe((x: ToDoItem) => {
-          debugger;
         },
           error => {
             this.addItemToList(toDoItem);
