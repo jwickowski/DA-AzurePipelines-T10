@@ -5,14 +5,12 @@ import { ToDoItemsDataSourceFakeService } from 'src/app/to-do/to-do-items-data-s
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  apiUrl: ' https://localhost:5001'
+  production: false
 };
 
 export { ToDoItemsDataSourceFakeService as CurrentToDoItemsDataSourceService } 
 
 /*
- * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
  *
  * This import should be commented out in production mode because it will have a negative impact

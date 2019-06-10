@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToDoModule } from './to-do/to-do.module';
+import { EnvConfigService } from './env-config.service';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import { ToDoModule } from './to-do/to-do.module';
     AppRoutingModule,
     ToDoModule
   ],
-  providers: [],
+  providers: [EnvConfigService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
