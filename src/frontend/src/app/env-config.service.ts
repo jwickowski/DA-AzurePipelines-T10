@@ -8,13 +8,13 @@ import { ReplaySubject, Observable } from 'rxjs';
 export class EnvConfigService {
     private apiUrlSubject$:  ReplaySubject<string> = new ReplaySubject<string>(1);
     constructor(private httpClient: HttpClient) {
-
-    }
-    public init() {
         this.httpClient.get("env.json").subscribe((x: any) => {
             console.log(x.apiUrl);
             this.apiUrlSubject$.next(x.apiUrl);
         });
+    }
+    public init() {
+        
     }
 
     public getApiUrl$(): Observable<string>{

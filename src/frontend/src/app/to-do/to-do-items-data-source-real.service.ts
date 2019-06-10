@@ -11,17 +11,16 @@ import { switchMap } from 'rxjs/operators';
 })
 export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceService {
   private items: BehaviorSubject<ToDoItem[]> = new BehaviorSubject<ToDoItem[]>([]);
-  private url: string;
   constructor(private httpClient: HttpClient, private envConfigService: EnvConfigService) {
-    
+
   }
 
   public getToDoItems$(): Observable<ToDoItem[]> {
-      this.envConfigService.getApiUrl$()
+    this.envConfigService.getApiUrl$()
       .pipe(switchMap(x => this.httpClient.get(x + "/api/listitems")))
       .subscribe((x: ToDoItem[]) => {
-      this.items.next(x);
-    });
+        this.items.next(x);
+      });
     return this.items.asObservable();
   }
 
@@ -29,14 +28,15 @@ export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceServic
     var newItem: ToDoItem = { id: '', name: itemName };
     this.addItemToList(newItem);
 
-    var getUrl = this.url + "/api/listitems";
+    this.envConfigService.getApiUrl$()
+      .pipe(switchMap(x => this.httpClient.post(x + "/api/listitems", { name: itemName })))
 
-    this.httpClient.post(getUrl, { name: itemName }).subscribe((x: ToDoItem) => {
-      newItem.id = x.id
-    },
-      error => {
-        this.removeItem(newItem);
-      });
+      .subscribe((x: ToDoItem) => {
+        newItem.id = x.id
+      },
+        error => {
+          this.removeItem(newItem);
+        });
   }
 
   private addItemToList(newItem: ToDoItem) {
@@ -48,14 +48,17 @@ export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceServic
   public setAsDone(toDoItem: ToDoItem) {
     this.removeItem(toDoItem);
     if (toDoItem.id) {
-      var putUrl = this.url + "/api/listitems/" + toDoItem.id + "/check";
-      debugger;
-      this.httpClient.put(putUrl, {}).subscribe((x: ToDoItem) => {
-        debugger;
-      },
-        error => {
-          this.addItemToList(toDoItem);
-        });
+      this.envConfigService.getApiUrl$()
+        .pipe(switchMap(x => {
+          var putUrl = x + "/api/listitems/" + toDoItem.id + "/check";
+          return this.httpClient.put(putUrl, {})
+        }))
+        .subscribe((x: ToDoItem) => {
+          debugger;
+        },
+          error => {
+            this.addItemToList(toDoItem);
+          });
     }
   }
 
