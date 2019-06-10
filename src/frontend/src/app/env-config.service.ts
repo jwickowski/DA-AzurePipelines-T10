@@ -11,6 +11,7 @@ export class EnvConfigService {
     }
     public init() {
         this.httpClient.get("env.json").subscribe((x: any) => {
+            console.log(x);
             this.apiUrl = x.apiUrl;
         });
     }
