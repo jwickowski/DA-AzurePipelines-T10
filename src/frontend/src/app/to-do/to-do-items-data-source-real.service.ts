@@ -4,6 +4,7 @@ import { ToDoItem } from './to-do-list-view/to-do-item.model';
 import { ToDoItemsDataSourceService } from './to-do-items-data-source.service';
 import { HttpClient } from '@angular/common/http';
 import { EnvConfigService } from '../env-config.service';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,13 @@ export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceServic
   private items: BehaviorSubject<ToDoItem[]> = new BehaviorSubject<ToDoItem[]>([]);
   private url: string;
   constructor(private httpClient: HttpClient, private envConfigService: EnvConfigService) {
-    this.url = envConfigService.apiUrl;
+    
   }
 
   public getToDoItems$(): Observable<ToDoItem[]> {
-    var getUrl = this.url + "/api/listitems";
-    this.httpClient.get(getUrl).subscribe((x: ToDoItem[]) => {
+      this.envConfigService.apiUrl$.asObservable()
+      .pipe(switchMap(x => this.httpClient.get(x + "/api/listitems")))
+      .subscribe((x: ToDoItem[]) => {
       this.items.next(x);
     });
     return this.items.asObservable();
