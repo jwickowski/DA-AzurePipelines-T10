@@ -17,7 +17,7 @@ export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceServic
   }
 
   public getToDoItems$(): Observable<ToDoItem[]> {
-      this.envConfigService.apiUrl$.asObservable()
+      this.envConfigService.getApiUrl$()
       .pipe(switchMap(x => this.httpClient.get(x + "/api/listitems")))
       .subscribe((x: ToDoItem[]) => {
       this.items.next(x);

@@ -1,20 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class EnvConfigService {
-    public apiUrl$:  ReplaySubject<string> = new ReplaySubject<string>(1);
+    private apiUrlSubject$:  ReplaySubject<string> = new ReplaySubject<string>(1);
     constructor(private httpClient: HttpClient) {
 
     }
     public init() {
         this.httpClient.get("env.json").subscribe((x: any) => {
-            console.log(x);
-            this.apiUrl$.next(x.apiUrl);
+            console.log(x.apiUrl);
+            this.apiUrlSubject$.next(x.apiUrl);
         });
+    }
+
+    public getApiUrl$(): Observable<string>{
+        return this.apiUrlSubject$.asObservable();
     }
 
 
