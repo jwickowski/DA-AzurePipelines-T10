@@ -1,6 +1,6 @@
-<div *ngIf="isAppReady$ | async" >Application is loading</div>
+<div *ngIf="!(isAppReady$ | async)" >Application is loading</div>
 
-<div *ngIf="!9isAppReady$ | async)" >
+<div *ngIf="isAppReady$ | async" >
 
 <div style="text-align:center">
   <h1>

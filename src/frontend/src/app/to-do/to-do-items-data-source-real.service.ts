@@ -16,11 +16,12 @@ export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceServic
   }
 
   public getToDoItems$(): Observable<ToDoItem[]> {
-    this.envConfigService.getApiUrl$()
-      .pipe(switchMap(x => this.httpClient.get(x + "/api/listitems")))
-      .subscribe((x: ToDoItem[]) => {
-        this.items.next(x);
+    const url = this.envConfigService.getConfig().apiUrl + "/api/listitems";
+    this.httpClient.get(url)
+      .subscribe((data: ToDoItem[]) => {
+        this.items.next(data);
       });
+
     return this.items.asObservable();
   }
 
@@ -28,8 +29,8 @@ export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceServic
     var newItem: ToDoItem = { id: '', name: itemName };
     this.addItemToList(newItem);
 
-    this.envConfigService.getApiUrl$()
-      .pipe(switchMap(x => this.httpClient.post(x + "/api/listitems", { name: itemName })))
+    const url = this.envConfigService.getConfig().apiUrl + "/api/listitems";
+    this.httpClient.post(url, { name: itemName })
       .subscribe((x: ToDoItem) => {
         newItem.id = x.id
       },
@@ -47,11 +48,9 @@ export class ToDoItemsDataSourceRealService implements ToDoItemsDataSourceServic
   public setAsDone(toDoItem: ToDoItem) {
     this.removeItem(toDoItem);
     if (toDoItem.id) {
-      this.envConfigService.getApiUrl$()
-        .pipe(switchMap(x => {
-          var putUrl = x + "/api/listitems/" + toDoItem.id + "/check";
-          return this.httpClient.put(putUrl, {})
-        }))
+      const putUrl = this.envConfigService.getConfig().apiUrl + "/api/listitems/" + toDoItem.id + "/check"
+
+      this.httpClient.put(putUrl, {})
         .subscribe((x: ToDoItem) => {
         },
           error => {
