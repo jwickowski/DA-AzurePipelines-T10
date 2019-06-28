@@ -1,24 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ReplaySubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class EnvConfigService {
-    private apiUrlSubject$:  ReplaySubject<string> = new ReplaySubject<string>(1);
+    private isConfigReadySubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    private config: EnvConfig;
+
     constructor(private httpClient: HttpClient) {
-     
+
     }
+
     public init() {
-        this.httpClient.get("env.json").subscribe((x: any) => {
-            this.apiUrlSubject$.next(x.apiUrl);
+        this.httpClient.get("env.json").subscribe((data: EnvConfig) => {
+            this.config = data;
+            this.isConfigReadySubject$.next(true);
         });
     }
 
-    public getApiUrl$(): Observable<string>{
-        return this.apiUrlSubject$.asObservable();
+    public getConfig(): EnvConfig {
+        return this.config;
     }
 
+    public isConfigReady$(): Observable<boolean> {
+        return this.isConfigReadySubject$.asObservable();
+    }
+}
 
+export interface EnvConfig {
+    apiUrl: string;
+    isRealStorageEnabled: boolean
 }

@@ -1,5 +1,3 @@
-import { ToDoItemsDataSourceFakeService } from 'src/app/to-do/to-do-items-data-source-fake.service';
-
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
@@ -7,8 +5,6 @@ import { ToDoItemsDataSourceFakeService } from 'src/app/to-do/to-do-items-data-s
 export const environment = {
   production: false
 };
-
-export { ToDoItemsDataSourceFakeService as CurrentToDoItemsDataSourceService } 
 
 /*
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
