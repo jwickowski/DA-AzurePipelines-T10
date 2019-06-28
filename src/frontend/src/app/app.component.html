@@ -1,8 +1,11 @@
-<!--The content below is only a placeholder and can be replaced.-->
+<div *ngIf="isAppReady$ | async" >Application is loading</div>
+
+<div *ngIf="!9isAppReady$ | async)" >
+
 <div style="text-align:center">
   <h1>
     Good morning!
   </h1>
   <img width="300" alt="Logo" src="assets/logo.png">
-
 <router-outlet></router-outlet>
+</div>

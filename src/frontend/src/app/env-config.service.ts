@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class EnvConfigService {
-    private isConfigReady$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    private isConfigReadySubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     private config: EnvConfig;
 
     constructor(private httpClient: HttpClient) {
@@ -16,12 +16,16 @@ export class EnvConfigService {
     public init() {
         this.httpClient.get("env.json").subscribe((data: EnvConfig) => {
             this.config = data;
-            this.isConfigReady$.next(true);
+            this.isConfigReadySubject$.next(true);
         });
     }
 
     public getConfig(): EnvConfig {
         return this.config;
+    }
+
+    public isConfigReady$(): Observable<boolean> {
+        return this.isConfigReadySubject$.asObservable();
     }
 }
 
