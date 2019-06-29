@@ -19,6 +19,12 @@
         },
         "alertrules_Failure_Anomalies___DA_Szkolenie_App_Insight_name": {
             "value": null
+        },
+        "database_name": {
+            "value": null
+        },
+        "ervers_da_szkolenie_server_password":{
+            "value": null
         }
     }
 }

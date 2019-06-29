@@ -18,7 +18,6 @@
             "defaultValue": "da-database",
             "type": "String"
         },
-        
         "serverfarms_ASP_DASzkolenie_b8b6_name": {
             "defaultValue": "ASP-DASzkolenie-b8b6",
             "type": "String"
