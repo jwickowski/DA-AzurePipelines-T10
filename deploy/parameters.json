@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_DA_Szkolenie_back_name": {
+            "value": null
+        },
+        "sites_DA_Szkolenie_front_name": {
+            "value": null
+        },
+        "servers_da_szkolenie_server_name": {
+            "value": null
+        },
+        "serverfarms_ASP_DASzkolenie_b8b6_name": {
+            "value": null
+        },
+        "components_DA_Szkolenie_App_Insight_name": {
+            "value": null
+        },
+        "alertrules_Failure_Anomalies___DA_Szkolenie_App_Insight_name": {
+            "value": null
+        }
+    }
+}
