@@ -6,11 +6,9 @@ import { ToDoItemsDataSourceFakeService } from './to-do-items-data-source-fake.s
 export function ToDoItemsDataSourceServiceFactory(
   envConfigService: EnvConfigService,
   httpClient: HttpClient) {
-    console.log(arguments);
   if (envConfigService.getConfig().isRealStorageEnabled) {
     return new ToDoItemsDataSourceRealService(httpClient, envConfigService);
   }
-  else {
+  
     return new ToDoItemsDataSourceFakeService();
-  }
 }

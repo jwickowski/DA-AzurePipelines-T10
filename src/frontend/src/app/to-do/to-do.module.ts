@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToDoListViewComponent } from './to-do-list-view/to-do-list-view.component';
 import { ToDoItemsDataSourceService } from './to-do-items-data-source.service';
-import { FormsModule }  from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ToDoItemsDataSourceServiceFactory } from './to-do-items-data-source.service.factory';
@@ -14,7 +14,7 @@ import { EnvConfigService } from '../env-config.service';
   ],
   imports: [
     CommonModule,
-    FormsModule,  
+    FormsModule,
     BrowserModule,
     HttpClientModule
   ],
@@ -23,9 +23,10 @@ import { EnvConfigService } from '../env-config.service';
   ],
   providers: [
     {
-      provide: ToDoItemsDataSourceService, 
+      provide: ToDoItemsDataSourceService,
       useFactory: ToDoItemsDataSourceServiceFactory,
-    deps: [EnvConfigService, HttpClient]}
+      deps: [EnvConfigService, HttpClient]
+    }
   ]
 })
 export class ToDoModule { }
