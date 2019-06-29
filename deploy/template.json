@@ -25,6 +25,10 @@
         "alertrules_Failure_Anomalies___DA_Szkolenie_App_Insight_name": {
             "defaultValue": "Failure Anomalies - DA-Szkolenie-App-Insight",
             "type": "String"
+        },
+        "servers_da_szkolenie_server_password" :{
+            "defaultValue": null,
+            "type": "string"
         }
     },
     "variables": {},
@@ -48,6 +52,7 @@
             "kind": "v12.0",
             "properties": {
                 "administratorLogin": "[parameters('servers_da_szkolenie_server_name')]",
+                "administratorLoginPassword": "[parameters('servers_da_szkolenie_server_password')]",
                 "version": "12.0"
             }
         },
