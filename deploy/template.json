@@ -62,6 +62,18 @@
             }
         },
         {
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "apiVersion": "2015-05-01-preview",
+            "name": "[concat(parameters('servers_da_szkolenie_server_name'), '/AllowAllWindowsAzureIps')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_da_szkolenie_server_name'))]"
+            ],
+            "properties": {
+                "startIpAddress": "0.0.0.0",
+                "endIpAddress": "0.0.0.0"
+            }
+        },
+        {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2016-09-01",
             "name": "[parameters('serverfarms_ASP_DASzkolenie_b8b6_name')]",
@@ -85,19 +97,19 @@
         {
             "type": "Microsoft.Sql/servers/databases",
             "apiVersion": "2017-03-01-preview",
-            "name": "[concat(parameters('servers_da_szkolenie_server_name'), parameters('database_name'))]",
+            "name": "[concat(parameters('servers_da_szkolenie_server_name'),'/' ,parameters('database_name'))]",
             "location": "westeurope",
             "dependsOn": [
                 "[resourceId('Microsoft.Sql/servers', parameters('servers_da_szkolenie_server_name'))]"
             ],
             "sku": {
-                "name": "Free",
-                "tier": "Free"
+                "name": "Basic",
+                "tier": "Basic"
             },
             "kind": "v12.0,user",
             "properties": {
                 "collation": "SQL_Latin1_General_CP1_CI_AS",
-                "maxSizeBytes": 33554432,
+                "maxSizeBytes": 104857600,
                 "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
                 "zoneRedundant": false
             }
@@ -117,12 +129,12 @@
                 "enabled": true,
                 "hostNameSslStates": [
                     {
-                        "name": "da-szkolenie-back.azurewebsites.net",
+                        "name": "[concat(parameters('sites_DA_Szkolenie_back_name'), '.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Standard"
                     },
                     {
-                        "name": "da-szkolenie-back.scm.azurewebsites.net",
+                        "name": "[concat(parameters('sites_DA_Szkolenie_back_name'), '.scm.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Repository"
                     }
@@ -149,14 +161,14 @@
             "kind": "app",
             "properties": {
                 "enabled": true,
-                "hostNameSslStates": [
+                 "hostNameSslStates": [
                     {
-                        "name": "da-szkolenie-front.azurewebsites.net",
+                        "name": "[concat(parameters('sites_DA_Szkolenie_front_name'), '.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Standard"
                     },
                     {
-                        "name": "da-szkolenie-front.scm.azurewebsites.net",
+                        "name": "[concat(parameters('sites_DA_Szkolenie_front_name'), '.scm.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Repository"
                     }
@@ -182,7 +194,7 @@
                 "[resourceId('Microsoft.Web/sites', parameters('sites_DA_Szkolenie_back_name'))]"
             ],
             "properties": {
-                "siteName": "DA-Szkolenie-back",
+                "siteName": "[parameters('sites_DA_Szkolenie_back_name')]",
                 "hostNameType": "Verified"
             }
         },
@@ -195,7 +207,7 @@
                 "[resourceId('Microsoft.Web/sites', parameters('sites_DA_Szkolenie_front_name'))]"
             ],
             "properties": {
-                "siteName": "DA-Szkolenie-front",
+                "siteName": "[parameters('sites_DA_Szkolenie_front_name')]",
                 "hostNameType": "Verified"
             }
         }
