@@ -85,7 +85,7 @@
         {
             "type": "Microsoft.Sql/servers/databases",
             "apiVersion": "2017-03-01-preview",
-            "name": "[concat(parameters('servers_da_szkolenie_server_name'), parameters('database_name')')]",
+            "name": "[concat(parameters('servers_da_szkolenie_server_name'), parameters('database_name'))]",
             "location": "westeurope",
             "dependsOn": [
                 "[resourceId('Microsoft.Sql/servers', parameters('servers_da_szkolenie_server_name'))]"
