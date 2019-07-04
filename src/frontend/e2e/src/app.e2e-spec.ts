@@ -6,11 +6,21 @@ describe('workspace-project App', () => {
 
   beforeEach(() => {
     page = new AppPage();
+    browser.waitForAngularEnabled(false); 
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to ToDoListApp!');
+  it('should display welcome message', async (done) => {
+    await page.navigateTo();
+    var itemsBeforeAdding = await page.getItemsCount();
+
+    await page.getInput().sendKeys('sample item');
+    await page.getButton().click();
+    await browser.sleep(1500);
+    await browser.refresh();
+    await browser.sleep(1500);
+    var itemsAfterAdding = await page.getItemsCount();
+    expect(itemsAfterAdding).toBe(itemsBeforeAdding +1);
+    done();
   });
 
   afterEach(async () => {
