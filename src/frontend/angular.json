@@ -118,7 +118,8 @@
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ToDoListApp:serve:production"
+            "devServerTarget": ""
+
             }
           }
         },
