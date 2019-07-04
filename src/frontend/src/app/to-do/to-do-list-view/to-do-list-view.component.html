@@ -1,14 +1,14 @@
  <div>
-    <div *ngFor="let item of toDoItems$ | async; let i = index">
-      {{item.name}} | <button (click)="setAsDone(item)">setAsDone</button> 
+    <div *ngFor="let item of toDoItems$ | async; let i = index" class='to-do__to-do-list-view-component__list'>
+      <span class="to-do__to-do-list-view-component__list__item">{{item.name}}</span> | <button (click)="setAsDone(item)">setAsDone</button> 
     </div>
     </div>
 
 
-<input [(ngModel)]="newToDoItem"/>
+<input [(ngModel)]="newToDoItem" class='to-do__to-do-list-view-component__input'/>
 <br/>
 
-<button (click)="addNewItem()">Add!</button>
+<button (click)="addNewItem()" class="to-do__to-do-list-view-component__button">Add!</button>
 
 
 
