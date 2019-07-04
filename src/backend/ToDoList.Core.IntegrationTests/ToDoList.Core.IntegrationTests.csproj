@@ -18,8 +18,8 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\..\ToDoList.Core\ToDoList.Core.csproj" />
-      <ProjectReference Include="..\..\ToDoList.EntityFramework\ToDoList.EntityFramework.csproj" />
+      <ProjectReference Include="..\ToDoList.Core\ToDoList.Core.csproj" />
+      <ProjectReference Include="..\ToDoList.EntityFramework\ToDoList.EntityFramework.csproj" />
     </ItemGroup>
 
 </Project>
