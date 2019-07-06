@@ -15,11 +15,11 @@ describe('workspace-project App', () => {
     await browser.sleep(5000);
     var itemsBeforeAdding = await page.getItemsCount();
 
-     page.getInput().sendKeys('sample item');
-   page.getButton().click();
+    page.getInput().sendKeys('sample item');
+    page.getButton().click();
     await browser.sleep(1000);
     await browser.refresh();
-    
+
     await browser.sleep(3000);
     var itemsAfterAdding = await page.getItemsCount();
     expect(itemsAfterAdding).toBe(itemsBeforeAdding + 1);

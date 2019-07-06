@@ -37,13 +37,12 @@ namespace ToDoList.Core.IntegrationTests
         private string GetTestConnectionString()
         {
             var projectDir = Directory.GetCurrentDirectory();
-            var configPath = Path.Combine(projectDir, "appsettings.json");
-            var configJson = File.ReadAllText(configPath);
+            var settingsFilePath = Path.Combine(projectDir, "appsettings.json");
+            var configJson = File.ReadAllText(settingsFilePath);
             var resource = JObject.Parse(configJson);
-            var connectionStinrg = resource["ConnectionStrings"];
-            var cs = connectionStinrg["ToDoListDatabase"];
-            var aa = cs.Value<string>();
-            return aa;
+            var connectionStinrgNode = resource["ConnectionStrings"]["ToDoListDatabase"];
+            var connectionString = connectionStinrgNode.Value<string>();
+            return connectionString;
         }
         
         private void CleanDatabase(ToDoListContext context)
