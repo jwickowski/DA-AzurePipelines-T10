@@ -2,3 +2,5 @@ obj/
 bin/
 .idea/
 junit/
+
+deploy/tools
