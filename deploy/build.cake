@@ -63,23 +63,37 @@ var tempDir = MakeAbsolute(baseDir + Directory("temp/backend")).ToString();
     CleanDirectory(tempDir);
 });
 
-Task("Deploy")
+Task("PrepareBackendPackage")
 .Does(()=>{
 var deployTempDir = MakeAbsolute(baseDir + Directory("temp/depeloy/back")).ToString();
-
-    //Unzip(packageDir + "/backend.zip", deployTempDir);
+    Unzip(packageDir + "/backend.zip", deployTempDir);
     var settingsPath = deployTempDir + "/appsettings.json";
     var settingsString = FileReadText(settingsPath);
-    //Information(settingsString);
-var settings = ParseJson(settingsString);
-settings["ConnectionStrings"]["ToDoListDatabase"] = "Server=tcp:da-sqlserver-program.database.windows.net,1433;Initial Catalog=da-database-program;Persist Security Info=False;User ID=da-sqlserver-program;Password=jkdfhafSADSAA123123!@#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+    var settings = ParseJson(settingsString);
+    settings["ConnectionStrings"]["ToDoListDatabase"] = "XXXXServer=tcp:da-sqlserver-program.database.windows.net,1433;Initial Catalog=da-database-program;Persist Security Info=False;User ID=da-sqlserver-program;Password=jkdfhafSADSAA123123!@#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
     settingsString = settings.ToString();
     FileWriteText( settingsPath,settingsString);
     Zip(deployTempDir, packageDir + "/backend_with_params.zip" );
-
     CleanDirectory(deployTempDir);
 });
 
+Task("DeployBackend")
+.IsDependentOn("PrepareBackendPackage")
+.Does(()=>{
+    CurlUploadFile(
+        packageDir + "/backend_with_params.zip",
+        new Uri("https://da-back-program.scm.azurewebsites.net/api/zipdeploy"),
+        new CurlSettings{
+            RequestCommand = "POST",
+            Username= "$da-back-program",
+            Password="BLupqzPJJkxnxB1Bd9tsMFF62zruuZ7a3jHXffX1wAgQpGnowplgRHggrYXJ",
+            ArgumentCustomization = args => {
+             return  args.Append("--fail");
+            }
+                
+        }
+    );
+});
 // Task("Build")
 //     .IsDependentOn("Restore-NuGet-Packages")
 //     .Does(() =>
@@ -112,7 +126,7 @@ settings["ConnectionStrings"]["ToDoListDatabase"] = "Server=tcp:da-sqlserver-pro
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-.IsDependentOn("Deploy");
+.IsDependentOn("DeployBackend");
     //.IsDependentOn("Run-Unit-Tests");
 
 //////////////////////////////////////////////////////////////////////
