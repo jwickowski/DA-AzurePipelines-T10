@@ -9,73 +9,41 @@ var deployUsername = Argument("deployUsername");
 var deployPassword = Argument("deployPassword");
 var appName = Argument("appName");
 
-var baseDir = Directory("..");
-var backendDir = MakeAbsolute(baseDir + Directory("src/backend")).ToString();
-var packageDir = MakeAbsolute(baseDir + Directory("package")).ToString();
-
-Task("Clean")
-    .Does(() =>
-    {
-        CleanDirectory(packageDir);
-    });
-
-Task("CompileBackend")
-    .IsDependentOn("Clean")
-    .Does(() =>
-    {
-    var slnPath = backendDir + "/ToDoList.sln";
-    DotNetCoreBuild(slnPath );
-    });
-
-Task("TestingBackend")
-    .IsDependentOn("CompileBackend")
-    .Does(()=>
-    {
-        var unitTestPath = backendDir + "/ToDoList.Core.UnitTests/ToDoList.Core.UnitTests.csproj";
-        DotNetCoreTest(unitTestPath);
-    });
-
-Task("PackageBackend")
-    .IsDependentOn("TestingBackend")
-    .Does(()=>
-    {
-        var tempDir = MakeAbsolute(baseDir + Directory("temp/backend")).ToString();
-
-        var webApiPath = backendDir + "/ToDoList.WebApi/ToDoList.WebApi.csproj";
-        var settings = new DotNetCorePublishSettings() 
-        {
-            NoBuild= true,
-            OutputDirectory = tempDir,
-        };
-
-        DotNetCorePublish(webApiPath, settings);
-        EnsureDirectoryExists(packageDir);
-        Zip(tempDir, packageDir + "/backend.zip" );
-        CleanDirectory(tempDir);
-});
+var baseDir = Directory(".");
 
 Task("PrepareBackendPackage")
     .Does(()=>
     {
-        var deployTempDir = MakeAbsolute(baseDir + Directory("temp/depeloy/back")).ToString();
-        Unzip(packageDir + "/backend.zip", deployTempDir);
-        var settingsPath = deployTempDir + "/appsettings.json";
+        var tempDir = MakeAbsolute(baseDir + Directory("temp")).ToString();
+		
+        Information("Unzip: backend.zip"); 
+        Unzip("backend.zip", tempDir);
+
+        Information("Updating connectionString"); 
+        var settingsPath = tempDir + "/appsettings.json";
         var settingsString = FileReadText(settingsPath);
         var settings = ParseJson(settingsString);
         settings["ConnectionStrings"]["ToDoListDatabase"] = connectionString;
         settingsString = settings.ToString();
+
+        Information("Saving new config"); 
         FileWriteText(settingsPath,settingsString);
-        Zip(deployTempDir, packageDir + "/backend_with_params.zip" );
-        CleanDirectory(deployTempDir);
+        
+        Information("Saving new config"); 
+        Zip(tempDir, packageDir + "/backend_with_params.zip" );
+        CleanDirectory(tempDir);
     });
 
 Task("DeployBackend")
     .IsDependentOn("PrepareBackendPackage")
     .Does(()=>
     {
+        var url = $"https://{appName}.scm.azurewebsites.net/api/zipdeploy";
+        Information("Deploy to: " +  url); 
+
         CurlUploadFile(
             packageDir + "/backend_with_params.zip",
-            new Uri($"https://{appName}.scm.azurewebsites.net/api/zipdeploy"),
+            new Uri(url),
             new CurlSettings
             {
                 RequestCommand = "POST",
@@ -85,7 +53,6 @@ Task("DeployBackend")
                 {
                     return  args.Append("--fail");
                 }
-                
             }
         );
     });
