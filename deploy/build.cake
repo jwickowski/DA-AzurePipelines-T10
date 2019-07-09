@@ -33,7 +33,7 @@ Task("Clean")
     CleanDirectory(packageDir);
 });
 
-Task("Compile")
+Task("CompileBackend")
     .IsDependentOn("Clean")
     .Does(() =>
 {
@@ -41,15 +41,15 @@ Task("Compile")
     DotNetCoreBuild(slnPath );
 });
 
-Task("Testing")
-.IsDependentOn("Compile")
+Task("TestingBackend")
+.IsDependentOn("CompileBackend")
 .Does(()=>{
     var unitTestPath = backendDir + "/ToDoList.Core.UnitTests/ToDoList.Core.UnitTests.csproj";
     DotNetCoreTest(unitTestPath);
 });
 
-Task("Package")
-.IsDependentOn("Testing")
+Task("PackageBackend")
+.IsDependentOn("TestingBackend")
 .Does(()=>{
     
 var tempDir = MakeAbsolute(baseDir + Directory("temp/backend")).ToString();
