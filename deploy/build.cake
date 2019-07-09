@@ -1,3 +1,8 @@
+#addin nuget:?package=Cake.Curl
+#addin nuget:?package=Cake.FileHelpers
+#addin nuget:?package=Cake.Json
+#addin nuget:?package=Newtonsoft.Json&version=11.0.2
+
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
@@ -22,7 +27,7 @@ var packageDir = MakeAbsolute(baseDir + Directory("package")).ToString();
 Task("Clean")
     .Does(() =>
 {
-    //CleanDirectory(buildDir);
+    CleanDirectory(packageDir);
 });
 
 Task("Compile")
@@ -34,12 +39,14 @@ Task("Compile")
 });
 
 Task("Testing")
+.IsDependentOn("Compile")
 .Does(()=>{
     var unitTestPath = backendDir + "/ToDoList.Core.UnitTests/ToDoList.Core.UnitTests.csproj";
     DotNetCoreTest(unitTestPath);
 });
 
-Task("Publish")
+Task("Package")
+//.IsDependentOn("Testing")
 .Does(()=>{
     
 var tempDir = MakeAbsolute(baseDir + Directory("temp/backend")).ToString();
@@ -54,6 +61,23 @@ var tempDir = MakeAbsolute(baseDir + Directory("temp/backend")).ToString();
     EnsureDirectoryExists(packageDir);
     Zip(tempDir, packageDir + "/backend.zip" );
     CleanDirectory(tempDir);
+});
+
+Task("Deploy")
+.Does(()=>{
+var deployTempDir = MakeAbsolute(baseDir + Directory("temp/depeloy/back")).ToString();
+
+    //Unzip(packageDir + "/backend.zip", deployTempDir);
+    var settingsPath = deployTempDir + "/appsettings.json";
+    var settingsString = FileReadText(settingsPath);
+    //Information(settingsString);
+var settings = ParseJson(settingsString);
+settings["ConnectionStrings"]["ToDoListDatabase"] = "Server=tcp:da-sqlserver-program.database.windows.net,1433;Initial Catalog=da-database-program;Persist Security Info=False;User ID=da-sqlserver-program;Password=jkdfhafSADSAA123123!@#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+    settingsString = settings.ToString();
+    FileWriteText( settingsPath,settingsString);
+    Zip(deployTempDir, packageDir + "/backend_with_params.zip" );
+
+    CleanDirectory(deployTempDir);
 });
 
 // Task("Build")
@@ -88,7 +112,7 @@ var tempDir = MakeAbsolute(baseDir + Directory("temp/backend")).ToString();
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-.IsDependentOn("Publish");
+.IsDependentOn("Deploy");
     //.IsDependentOn("Run-Unit-Tests");
 
 //////////////////////////////////////////////////////////////////////
