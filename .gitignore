@@ -3,5 +3,7 @@ bin/
 .idea/
 junit/
 
-deploy/tools
+deploy/tools/**
+!deploy/tools/packages.config
 package
+
