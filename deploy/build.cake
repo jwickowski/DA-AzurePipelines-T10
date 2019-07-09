@@ -10,8 +10,10 @@ var configuration = Argument("configuration", "Release");
 //////////////////////////////////////////////////////////////////////
 
 // Define directories.
-var backendDir = MakeAbsolute(Directory("../src/backend")).ToString();
-var frontendDir =MakeAbsolute(Directory("../src/frontend")).ToString();
+var baseDir = Directory("..");
+var backendDir = MakeAbsolute(baseDir + Directory("src/backend")).ToString();
+var frontendDir = MakeAbsolute(baseDir + Directory("src/frontend")).ToString();
+var packageDir = MakeAbsolute(baseDir + Directory("package")).ToString();
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -28,7 +30,30 @@ Task("Compile")
     .Does(() =>
 {
     var slnPath = backendDir + "/ToDoList.sln";
-    DotNetCoreBuild(slnPath);
+    DotNetCoreBuild(slnPath );
+});
+
+Task("Testing")
+.Does(()=>{
+    var unitTestPath = backendDir + "/ToDoList.Core.UnitTests/ToDoList.Core.UnitTests.csproj";
+    DotNetCoreTest(unitTestPath);
+});
+
+Task("Publish")
+.Does(()=>{
+    
+var tempDir = MakeAbsolute(baseDir + Directory("temp/backend")).ToString();
+
+    var webApiPath = backendDir + "/ToDoList.WebApi/ToDoList.WebApi.csproj";
+    var settings = new DotNetCorePublishSettings() {
+        NoBuild= true,
+        OutputDirectory = tempDir,
+    };
+
+    DotNetCorePublish(webApiPath, settings);
+    EnsureDirectoryExists(packageDir);
+    Zip(tempDir, packageDir + "/backend.zip" );
+    CleanDirectory(tempDir);
 });
 
 // Task("Build")
@@ -63,7 +88,7 @@ Task("Compile")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-.IsDependentOn("Compile");
+.IsDependentOn("Publish");
     //.IsDependentOn("Run-Unit-Tests");
 
 //////////////////////////////////////////////////////////////////////
