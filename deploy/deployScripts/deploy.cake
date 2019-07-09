@@ -9,12 +9,12 @@ var deployUsername = Argument("deployUsername");
 var deployPassword = Argument("deployPassword");
 var appName = Argument("appName");
 
-var baseDir = Directory(".");
+var baseDir = MakeAbsolute(Directory("."));
 
 Task("PrepareBackendPackage")
     .Does(()=>
     {
-        var tempDir = MakeAbsolute(baseDir + Directory("temp")).ToString();
+        var tempDir = baseDir + "/temp";
 		
         Information("Unzip: backend.zip"); 
         Unzip("backend.zip", tempDir);
@@ -30,7 +30,7 @@ Task("PrepareBackendPackage")
         FileWriteText(settingsPath,settingsString);
         
         Information("Saving new config"); 
-        Zip(tempDir, packageDir + "/backend_with_params.zip" );
+        Zip(tempDir, baseDir + "/backend_with_params.zip" );
         CleanDirectory(tempDir);
     });
 
@@ -42,7 +42,7 @@ Task("DeployBackend")
         Information("Deploy to: " +  url); 
 
         CurlUploadFile(
-            packageDir + "/backend_with_params.zip",
+            baseDir + "/backend_with_params.zip",
             new Uri(url),
             new CurlSettings
             {
