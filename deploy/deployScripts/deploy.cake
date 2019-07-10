@@ -4,10 +4,10 @@
 #addin nuget:?package=Newtonsoft.Json&version=11.0.2
 
 var target = Argument("target", "Default");
-var connectionString = Argument("connectionString", "");
-var deployUsername = Argument("deployUsername", "");
-var deployPassword = Argument("deployPassword", "");
-var appName = Argument("appName" , "x");
+var connectionString = Argument<string>("connectionString");
+var deployUsername = Argument<string>("deployUsername");
+var deployPassword = Argument<string>("deployPassword");
+var appName = Argument<string>("appName");
 
 var baseDir = MakeAbsolute(Directory("."));
 
