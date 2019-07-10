@@ -4,10 +4,10 @@
 #addin nuget:?package=Newtonsoft.Json&version=11.0.2
 
 var target = Argument("target", "Default");
-var connectionString = Argument("connectionString");
-var deployUsername = Argument("deployUsername");
-var deployPassword = Argument("deployPassword");
-var appName = Argument("appName");
+var connectionString = Argument("connectionString", "");
+var deployUsername = Argument("deployUsername", "");
+var deployPassword = Argument("deployPassword", "");
+var appName = Argument("appName" , "x");
 
 var baseDir = MakeAbsolute(Directory("."));
 
@@ -39,7 +39,10 @@ Task("DeployBackend")
     .Does(()=>
     {
         var url = $"https://{appName}.scm.azurewebsites.net/api/zipdeploy";
-        Information("Deploy to: " +  url); 
+        Information("appName to: " + appName ); 
+        Information("url to: " +  url); 
+        Information("deployPassword to: " +  deployPassword); 
+        Information("deployUsername to: " +  deployUsername); 
 
         CurlUploadFile(
             baseDir + "/backend_with_params.zip",
@@ -47,8 +50,8 @@ Task("DeployBackend")
             new CurlSettings
             {
                 RequestCommand = "POST",
-                Username =  deployUsername, //"$da-back-program",
-                Password = deployPassword, //"BLupqzPJJkxnxB1Bd9tsMFF62zruuZ7a3jHXffX1wAgQpGnowplgRHggrYXJ",
+                Username =  deployUsername, //"",
+                Password = deployPassword   , //"",
                 ArgumentCustomization = args => 
                 {
                     return  args.Append("--fail");
