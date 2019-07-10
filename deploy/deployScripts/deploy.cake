@@ -1,7 +1,7 @@
 #addin nuget:?package=Cake.Curl
 #addin nuget:?package=Cake.FileHelpers
 #addin nuget:?package=Cake.Json
-#addin nuget:?package=Newtonsoft.Json
+#addin nuget:?package=Newtonsoft.Json&version=11.0.2
 
 var target = Argument("target", "Default");
 var connectionString = Argument<string>("connectionString");
