@@ -39,10 +39,6 @@ Task("DeployBackend")
     .Does(()=>
     {
         var url = $"https://{appName}.scm.azurewebsites.net/api/zipdeploy";
-        Information("appName to: " + appName ); 
-        Information("url to: " +  url); 
-        Information("deployPassword to: " +  deployPassword); 
-        Information("deployUsername to: " +  deployUsername); 
 
         CurlUploadFile(
             baseDir + "/backend_with_params.zip",
